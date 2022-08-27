@@ -21,8 +21,8 @@ router.post('/', async (req, res)=>{
     })
 
     try{
-        const savedGenre = await newGenre.save();
-        res.send(savedGenre);
+        await newGenre.save();
+        res.send(newGenre);
     } catch (e) {
         res.send(e.message);
     }

@@ -24,8 +24,8 @@ router.post('/', async (req, res) => {
     })
 
     try {
-        const savedCustomer = await savingCustomer.save();
-        res.send(savedCustomer);
+        await savingCustomer.save();
+        res.send(savingCustomer);
     } catch (e) {
         res.send(e.message)
     }

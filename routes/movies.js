@@ -32,8 +32,8 @@ router.post('/', async (req, res)=>{
     })
 
     try {
-        const savedMovie = await savingMovie.save();
-        res.send(savedMovie);
+        await savingMovie.save();
+        res.send(savingMovie);
     } catch (e) {
         res.send(e.message);
     }
