@@ -24,7 +24,7 @@ router.post('/', async (req, res)=>{
 
     const savingMovie = new Movie({
             ..._.pick(req.body, ["title", "numberInStock", "dailyRentalRate"]),
-            ..._.pick(genre, ["_id", "name"])
+            genre: _.pick(genre, ["_id", "name"])
         })
 
     try {
@@ -45,7 +45,7 @@ router.put('/:id', async (req, res)=>{
 
     const savingMovie = {
         ..._.pick(req.body, ["title", "numberInStock", "dailyRentalRate"]),
-        ..._.pick(genre, ["_id", "name"])
+        genre: _.pick(genre, ["_id", "name"])
     };
 
     try {
