@@ -22,6 +22,7 @@
     "url": "https://github.com/AshenI99/vidly/issues"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "express": "^4.18.1",
     "joi": "^17.6.0",
     "joi-objectid": "^4.0.2",
