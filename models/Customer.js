@@ -20,6 +20,25 @@ const customerSchema = mongoose.Schema({
     }
 })
 
+const rentalCustomerSchema = mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        maxLength:50,
+        minLength:5
+    },
+    mobile: {
+        type: String,
+        required: true,
+        minLength: 10,
+        maxLength: 20
+    },
+    isGold: {
+        type: Boolean,
+        default: false
+    }
+})
+
 const Customer = mongoose.model("Customer", customerSchema);
 
 const validateCustomer = (customer) => {
@@ -41,4 +60,5 @@ const validateCustomer = (customer) => {
 }
 
 exports.Customer = Customer;
+exports.rentalCustomerSchema = rentalCustomerSchema;
 exports.validate = validateCustomer;

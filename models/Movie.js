@@ -28,6 +28,21 @@ const movieSchema = new mongoose.Schema({
     }
 })
 
+const rentalMovieSchema = new mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+        minLength: 5,
+        maxLength: 150,
+        trim: true
+    },
+    dailyRentalRate: {
+        type: Number,
+        min: 0,
+        required: true
+    }
+})
+
 const Movie = mongoose.model("Movie", movieSchema);
 
 const validateMovie=(movie)=>{
@@ -38,7 +53,7 @@ const validateMovie=(movie)=>{
             .max(50)
             .required(),
 
-        genreId: Joi.string()
+        genreId: Joi.objectId()
             .required(),
 
         numberInStock: Joi.number()
@@ -54,4 +69,5 @@ const validateMovie=(movie)=>{
 }
 
 exports.Movie = Movie;
+exports.rentalMovieSchema = rentalMovieSchema;
 exports.validate = validateMovie;
