@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
@@ -29,17 +30,8 @@ router.post('/', async (req, res)=>{
     if(movie.numberInStock === 0) return res.status(400).send("Movie is not in stock");
 
     let rental = new Rental({
-        customer: {
-            _id: customer._id,
-            name: customer.name,
-            mobile: customer.mobile,
-            isGold: customer.isGold
-        },
-        movie: {
-            _id: movie._id,
-            title: movie.title,
-            dailyRentalRate: movie.dailyRentalRate
-        }
+        customer: _.pick(customer, ["_id", "name", "mobile", "isGold"]),
+        movie: _.pick(movie, ["_id", "title", "dailyRentalRate"])
     })
 
     try {

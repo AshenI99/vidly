@@ -1,3 +1,4 @@
+const _ = require("lodash");
 const express= require("express");
 const router = express.Router();
 
@@ -22,14 +23,9 @@ router.post('/', async (req, res)=>{
     if(!genre) return res.status(404).send("Invalid genre...")
 
     const savingMovie = new Movie({
-        title: req.body.title,
-        genre: {
-            _id: genre._id,
-            name: genre.name
-        },
-        numberInStock: req.body.numberInStock,
-        dailyRentalRate: req.body.dailyRentalRate
-    })
+            ..._.pick(req.body, ["title", "numberInStock", "dailyRentalRate"]),
+            ..._.pick(genre, ["_id", "name"])
+        })
 
     try {
         await savingMovie.save();
@@ -48,13 +44,8 @@ router.put('/:id', async (req, res)=>{
     if(!genre) return res.status(404).send("Invalid genre...")
 
     const savingMovie = {
-        title: req.body.title,
-        genre: {
-            _id: genre._id,
-            name: genre.name
-        },
-        numberInStock: req.body.numberInStock,
-        dailyRentalRate: req.body.dailyRentalRate
+        ..._.pick(req.body, ["title", "numberInStock", "dailyRentalRate"]),
+        ..._.pick(genre, ["_id", "name"])
     };
 
     try {
