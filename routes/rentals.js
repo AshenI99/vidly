@@ -3,11 +3,12 @@ const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
 
+const auth = require("../middlewares/auth");
 const { Rental, validate } = require("../models/Rental");
 const { Customer } = require("../models/Customer");
 const { Movie } = require("../models/Movie");
 
-router.get('/', async (req, res)=>{
+router.get('/', auth, async (req, res)=>{
     try {
         const rentals = await Rental.find().sort("-dateOut");
         res.send(rentals);
@@ -16,7 +17,7 @@ router.get('/', async (req, res)=>{
     }
 })
 
-router.post('/', async (req, res)=>{
+router.post('/', auth, async (req, res)=>{
 
     const { error } = validate(req.body);
     if(error) return  res.status(400).send(error.details[0].message);
@@ -64,7 +65,7 @@ router.post('/', async (req, res)=>{
 //
 // })
 
-router.delete('/:id', async (req, res)=>{
+router.delete('/:id', auth, async (req, res)=>{
 
     const rental = await Rental.findById(req.params.id);
     if(!rental) return res.status(400).send("Invalid rental");
@@ -89,7 +90,7 @@ router.delete('/:id', async (req, res)=>{
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
     try {
         const rental = await Rental.findById(req.params.id);
 
