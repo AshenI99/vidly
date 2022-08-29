@@ -25,9 +25,9 @@ winston.exceptions.handle(new winston.transports.File({
     filename: 'logs/exceptions.log'
 }))
 
-winston.rejections.handle(new winston.transports.File({
-    filename: 'logs/exceptions.log'
-}))
+// winston.rejections.handle(new winston.transports.File({
+//     filename: 'logs/exceptions.log'
+// }))
 
 if(!config.get("jwtPrivateKey")){
     console.error("Fatal Error: jwtPrivateKey is not defined.");
