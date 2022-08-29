@@ -1,8 +1,5 @@
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const _ = require("lodash");
-const config = require("config");
 const express = require("express");
 const router = express.Router();
 
@@ -10,7 +7,6 @@ const {User} = require("../models/User");
 
 
 router.post('/', async (req, res)=>{
-
     const { error } = validate(req.body);
     if(error) return res.status(400).send(error.details[0].message);
 
@@ -22,7 +18,7 @@ router.post('/', async (req, res)=>{
 
     const token = user.generateAuthToken();
     res.setHeader('x-auth', token).send(token);
-})
+});
 
 const validate = (auth) => {
 

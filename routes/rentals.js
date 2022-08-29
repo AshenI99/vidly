@@ -4,18 +4,16 @@ const express = require("express");
 const router = express.Router();
 
 const auth = require("../middlewares/auth");
+const asyncMiddleware = require("../middlewares/async");
+
 const { Rental, validate } = require("../models/Rental");
 const { Customer } = require("../models/Customer");
 const { Movie } = require("../models/Movie");
 
 router.get('/', auth, async (req, res)=>{
-    try {
-        const rentals = await Rental.find().sort("-dateOut");
-        res.send(rentals);
-    } catch (e) {
-        res.send(e.message);
-    }
-})
+    const rentals = await Rental.find().sort("-dateOut");
+    res.send(rentals);
+});
 
 router.post('/', auth, async (req, res)=>{
 
@@ -35,21 +33,17 @@ router.post('/', auth, async (req, res)=>{
         movie: _.pick(movie, ["_id", "title", "dailyRentalRate"])
     })
 
-    try {
-        const session = await mongoose.startSession();
-        await session.withTransaction(async () => {
-            await rental.save();
+    const session = await mongoose.startSession();
+    await session.withTransaction(async () => {
+        await rental.save();
 
-            movie.numberInStock--;
-            await movie.save();
+        movie.numberInStock--;
+        await movie.save();
 
-            res.send(rental);
-        })
-        session.endSession();
-    } catch (e) {
-        res.send(e.message);
-    }
-})
+        res.send(rental);
+    })
+    session.endSession();
+});
 
 // router.put('/:id', async (req, res) => {
 //
@@ -66,41 +60,29 @@ router.post('/', auth, async (req, res)=>{
 // })
 
 router.delete('/:id', auth, async (req, res)=>{
-
     const rental = await Rental.findById(req.params.id);
     if(!rental) return res.status(400).send("Invalid rental");
 
     const movie = await Movie.findById(rental.movie._id);
 
-    try {
-        const session = await mongoose.startSession();
+    const session = await mongoose.startSession();
+    await session.withTransaction(async () => {
+        const deletedRental = await Rental.findByIdAndRemove(req.params.id);
 
-        await session.withTransaction(async () => {
-            const deletedRental = await Rental.findByIdAndRemove(req.params.id);
-
-            if (movie) {
-                movie.numberInStock++;
-                await movie.save();
-            }
-            res.send(deletedRental);
-        })
-        session.endSession();
-    } catch (e) {
-        res.send(e.message);
-    }
-})
+        if (movie) {
+            movie.numberInStock++;
+            await movie.save();
+        }
+        res.send(deletedRental);
+    })
+    session.endSession();
+});
 
 router.get('/:id', auth, async (req, res) => {
-    try {
-        const rental = await Rental.findById(req.params.id);
+    const rental = await Rental.findById(req.params.id);
+    if(!rental) return res.status(404).send("Rental with the given id is not found");
 
-        if(!rental) return res.status(404).send("Rental with the given id is not found");
-
-        res.send(rental);
-
-    } catch (e) {
-        res.send(e.message);
-    }
-})
+    res.send(rental);
+});
 
 module.exports = router;
