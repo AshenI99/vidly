@@ -4,7 +4,7 @@ const express = require("express");
 const router = express.Router();
 
 const auth = require("../middlewares/auth");
-const asyncMiddleware = require("../middlewares/async");
+const validateObjectId = require("../middlewares/validateObjectId");
 
 const { Rental, validate } = require("../models/Rental");
 const { Customer } = require("../models/Customer");
@@ -59,7 +59,7 @@ router.post('/', auth, async (req, res)=>{
 //
 // })
 
-router.delete('/:id', auth, async (req, res)=>{
+router.delete('/:id', [auth, validateObjectId], async (req, res)=>{
     const rental = await Rental.findById(req.params.id);
     if(!rental) return res.status(400).send("Invalid rental");
 
@@ -78,7 +78,7 @@ router.delete('/:id', auth, async (req, res)=>{
     session.endSession();
 });
 
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', [auth, validateObjectId], async (req, res) => {
     const rental = await Rental.findById(req.params.id);
     if(!rental) return res.status(404).send("Rental with the given id is not found");
 
