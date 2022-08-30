@@ -8,8 +8,8 @@ let server;
 describe("Auth Middleware", () => {
     beforeEach(() => { server = require("../../app");})
     afterEach(async () => {
-        server.close();
-        await Genre.remove({});
+        await server.close();
+        await Genre.deleteMany({});
     })
 
     let token;

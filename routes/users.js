@@ -4,7 +4,6 @@ const express = require("express");
 const router = express.Router();
 
 const auth = require("../middlewares/auth");
-const asyncMiddleware = require("../middlewares/async");
 
 const { User, validate } = require("../models/User")
 
